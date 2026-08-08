@@ -19,7 +19,7 @@ def multiple_line_input(message=''):
     
     return "\n".join(lines)
     
-
+#For importing and exporting on a json file
 class JSONFileReaderWriter():
     def read(self, filepath):
         try:

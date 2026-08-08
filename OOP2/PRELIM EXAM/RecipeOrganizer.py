@@ -115,6 +115,8 @@ class RecipeOrganizer:
     def import_recipe(self):
         file_importer = JSONFileReaderWriter()#import data
         json_data = file_importer.read('recipe_book.json')
+        if not json_data:
+            return
         #loop through the list
         for obj in json_data:
             #create an object
@@ -130,6 +132,9 @@ class RecipeOrganizer:
             #put in the right container
             right_container = map_list.get(obj["Category"])
             right_container.append(recipe_obj)
+
+        print("Imported Recipe Book Successful")
+        input("Press Enter To Continue...")
     
     def export_recipe(self):
         #turn each object into a dictionary
@@ -151,3 +156,5 @@ class RecipeOrganizer:
         #export to json
         file_exporter = JSONFileReaderWriter()
         file_exporter.write('recipe_book.json',exporting_list)
+        
+        print("Exported successfully")
