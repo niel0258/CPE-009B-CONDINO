@@ -13,6 +13,7 @@ class SimpleMenu:
         self._menu_choices = menu_choices
         self._menu_title = menu_title
 
+    #stored in a function as this will be called frequently``
     def _print_menu(self):
         clear_screen()
 
@@ -49,7 +50,7 @@ class SimpleMenu:
         with Listener(on_press=select_on_menu) as listener:
             listener.join()
 
-        # Discard any leftover newline
+        # Discard any leftover newline for both linux and windows
         try:
             import termios
             termios.tcflush(sys.stdin, termios.TCIFLUSH)
@@ -59,6 +60,7 @@ class SimpleMenu:
             while msvcrt.kbhit():
                 msvcrt.getch()
 
+        #Return the "index of the choice"
         current_choice = self._current_choice
         self._current_choice = 0
         

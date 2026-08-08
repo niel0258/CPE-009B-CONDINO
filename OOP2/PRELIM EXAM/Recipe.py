@@ -43,7 +43,41 @@ class Recipe:
         self.display_ingredients()
         self.display_steps()
 
+    #Turns the object's attribute into much storable json
+    def to_dict(self):
+        return {
+            "Category" : self.__class__.__name__,#so it uses the classes name for example: for a Breakfast object, this will return "Breakfast"
+            "Name": self._rec_name,
+            "Ingredients" : self._rec_ingredients,
+            "Instruction" : self._rec_steps,
+            "Equipment": self._rec_equipment,
+            "Serving":self._rec_serves,
+            "Cooking Time":self._rec_cooking_time
+        }
+    
+    @classmethod
+    #Method from the class instead of an object
+    #Alternative constructor from dictionary on json to a readble class
+    def from_dict(cls,data):
+        #dictionary of classes
+        #This is so that I can dynamically create different objects from different classes without using many lines
+        classes = {
+            "Breakfast":Breakfast,
+            "Lunch":Lunch,
+            "Dinner":Dinner,
+            "Snack":Snack,
+            "Dessert":Dessert
+        }
 
+        category_str = data.get("Category")
+        category_type = classes.get(category_str,Recipe)
+
+        return category_type(data["Name"],data["Ingredients"],data["Instruction"],data["Equipment"],data["Serving"],data["Cooking Time"])
+
+
+
+#INHERITANCE: FOR CLASSFICATION
+#POLYMORPHISM: THE SAME NAMED DISPLAY CATEGORY CAN PRODUCE DIFFERENT OUTPUT
 class Breakfast(Recipe):
     def display_category(self):
         print("Category: Breakfast")

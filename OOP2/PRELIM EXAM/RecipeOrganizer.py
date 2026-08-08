@@ -1,8 +1,9 @@
-from Reader import jsonFileEditor,clear_screen,multiple_line_input
+from Reader import JSONFileReaderWriter,clear_screen,multiple_line_input
 from SimpleMenu import SimpleMenu
 from Recipe import Recipe,Breakfast,Dinner,Lunch,Snack,Dessert
 from time import sleep
 
+#Many of the methods of this class is private. It is meant to just be accessed inside the class
 class RecipeOrganizer:
     category_names = ["Breakfast","Lunch","Snacks","Dinner","Dessert"]
 
@@ -30,6 +31,7 @@ class RecipeOrganizer:
         
         #create list of names
         names_list = []
+
         for i in range(len(chosen_list)):
             names_list.append(chosen_list[i].get_name())
         
@@ -56,14 +58,15 @@ class RecipeOrganizer:
 
         self._view_specific_recipe(chosen_list,choice)
 
-    #1.Bf, 2.Lun, 3. Sna, 4. Din, 5.Des
+    #1.choose from an interactive menu. Returns the index of the choice
     def _choose_categ(self):
         categ_menu = SimpleMenu(RecipeOrganizer.category_names,"CATEGORIES")
         
         choice = categ_menu.navigate_menu()
 
         return choice
-        
+    
+    #When the user inputted recipe. multiple line input is used for steps and ingredients as they most likely need it
     def input_recipe(self):
         clear_screen()
 
@@ -74,11 +77,10 @@ class RecipeOrganizer:
         recipe_servings = input("Input serving yield: ")
         recipe_time = input("Input the time it takes to cook: ")
 
-        recipe = 0
-
         #choose category
         choice = self._choose_categ()
 
+        #match case for a much better looking if else
         match choice:
             case 0:
                 recipe = Breakfast(recipe_name,recipe_ing,recipe_steps,recipe_equipment,recipe_servings,recipe_time)
@@ -106,8 +108,46 @@ class RecipeOrganizer:
 
         choice = self._choose_categ()
         self._view_category_list(choice)
+
+    #For importing and exporting the objects
+    #JSON is used as I am familiar with it and it can store pretty complex data
+
+    def import_recipe(self):
+        file_importer = JSONFileReaderWriter()#import data
+        json_data = file_importer.read('recipe_book.json')
+        #loop through the list
+        for obj in json_data:
+            #create an object
+            recipe_obj = Recipe.from_dict(obj)
+            #map of the container
+            map_list = {
+                "Breakfast":self.Breakfast,
+                "Lunch":self.Lunch,
+                "Dinner":self.Dinner,
+                "Snack":self.Snack,
+                "Dessert":self.Dessert
+            }
+            #put in the right container
+            right_container = map_list.get(obj["Category"])
+            right_container.append(recipe_obj)
     
     def export_recipe(self):
         #turn each object into a dictionary
+        #create function that loop in each list
         #store these dictionaries in one object
-        pass
+        exporting_list = []
+        
+        def turn_to_dict(original_list):
+            for elem in original_list:
+                exporting_list.append(elem.to_dict())
+
+        turn_to_dict(self.Breakfast)
+        turn_to_dict(self.Dinner) 
+        turn_to_dict(self.Lunch) 
+        turn_to_dict(self.Snack) 
+        turn_to_dict(self.Dessert)
+
+    
+        #export to json
+        file_exporter = JSONFileReaderWriter()
+        file_exporter.write('recipe_book.json',exporting_list)
