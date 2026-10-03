@@ -1,8 +1,6 @@
 from PyQt6.QtWidgets import QWidget
 import sys
 from PyQt6.QtWidgets import QApplication,QMainWindow,QLabel,QPushButton,QGridLayout,QVBoxLayout,QLineEdit
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
 
 class NameApp(QMainWindow):
     def __init__(self):
@@ -28,12 +26,15 @@ class NameApp(QMainWindow):
         self.main_layout.addLayout(self.grid)
 
         self.name_label = QLabel("Enter your full name",self)
+
         self.input_field = QLineEdit()
         self.input_field.setFixedHeight(36)
+        self.input_field.setText("Mam Sayo")#default text?
 
         self.copy_field = QLineEdit()
         self.copy_field.setReadOnly(True)
         self.copy_field.setFixedHeight(36)
+        self.copy_field.setText("Mam Sayo")#I guess this too?
 
         self.copy_btn = QPushButton("Click to display your fullname")
         self.copy_btn.clicked.connect(lambda: self.copy_field.setText(self.input_field.text()))
