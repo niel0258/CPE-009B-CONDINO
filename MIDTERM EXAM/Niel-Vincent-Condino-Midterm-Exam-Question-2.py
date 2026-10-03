@@ -14,7 +14,7 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         self.setFixedSize(self.size_x,self.size_y)
 
-        self.button = QPushButton("Click to change color",self)
+        self.button = QPushButton("Click to Change color",self)
         self.button.setMaximumWidth(500)
         self.button.clicked.connect(self.btn_change_color)
 
